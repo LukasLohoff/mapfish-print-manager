@@ -1,3 +1,4 @@
+import _cloneDeep from 'lodash/cloneDeep';
 import OlMap from 'ol/Map';
 import OlLayerVector from 'ol/layer/Vector';
 import OlSourceTileWMS from 'ol/source/TileWMS';
@@ -136,6 +137,14 @@ export class BaseMapFishPrintManager extends Observable {
    * @type {Function}
    */
   layerFilter = () => true;
+
+  /**
+   * A map function that will be called before the print call. Should
+   * return an updated layer instance.
+   *
+   * @type {Function}
+   */
+  layerTransformation = (layer) => layer;
 
   /**
    * A filter function that will be called before the print call. Should
@@ -601,6 +610,17 @@ export class BaseMapFishPrintManager extends Observable {
    */
   filterPrintableLayer(layer) {
     return layer !== this.extentLayer && layer.getVisible() && this.layerFilter(layer);
+  }
+
+  /**
+   * Transforms a given layer before printing.
+   *
+   * @param {ol.layer.Layer} layer The layer to transform.
+   *
+   * @return {ol.layer.Layer} The transformed layer.
+   */
+  transformPrintableLayer(layer) {
+    return this.layerTransformation(_cloneDeep(layer));
   }
 
   /**

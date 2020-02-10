@@ -172,6 +172,7 @@ export class MapFishPrintV2Manager extends BaseMapFishPrintManager {
 
     const serializedLayers = mapLayers
       .filter(this.filterPrintableLayer.bind(this))
+      .map(this.transformPrintableLayer.bind(this))
       .reduce((acc, layer) => {
         const serializedLayer = this.serializeLayer(layer);
         if (serializedLayer) {
